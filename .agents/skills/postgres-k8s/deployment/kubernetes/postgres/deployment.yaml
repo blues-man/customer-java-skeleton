@@ -30,7 +30,7 @@ spec:
             - name: POSTGRESQL_ADMIN_PASSWORD
               value: postgres
             - name: POSTGRESQL_DATABASE
-              value: fantaco_customer
+              value: customerdb
           volumeMounts:
             - name: postgres-customer-data
               mountPath: /var/lib/postgresql/data

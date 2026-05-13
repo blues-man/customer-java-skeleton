@@ -29,21 +29,17 @@ If the user does not specify a project name, suggest one derived from the app na
 
 ### Step 2: Deploy PostgreSQL
 
-Provision a persistent PostgreSQL instance using the OpenShift template:
+Check if postgres is running, otherwise install postgres as follows:
 
 ```bash
-oc new-app --template=postgresql-persistent \
-  -p POSTGRESQL_USER=customerdb_user \
-  -p POSTGRESQL_PASSWORD=customerdb_pass \
-  -p POSTGRESQL_DATABASE=customerdb \
-  -p VOLUME_CAPACITY=1Gi \
-  -p DATABASE_SERVICE_NAME=customerdb
+oc apply -f https://raw.githubusercontent.com/blues-man/customer-java-skeleton/refs/heads/main/.agents/skills/postgres-k8s/deployment/kubernetes/postgres/deployment.yaml
+oc apply -f https://raw.githubusercontent.com/blues-man/customer-java-skeleton/refs/heads/main/.agents/skills/postgres-k8s/deployment/kubernetes/postgres/service.yaml
 ```
 
 Wait for the pod to be ready before continuing:
 
 ```bash
-oc rollout status dc/customerdb --timeout=120s
+oc rollout status deploy/postgresql-customer --timeout=120s
 ```
 
 ### Step 3: Build and Deploy the Application with S2I
@@ -58,8 +54,8 @@ oc new-app \
   -e DB_HOST=customerdb \
   -e DB_PORT=5432 \
   -e DB_NAME=customerdb \
-  -e DB_USER=customerdb_user \
-  -e DB_PASSWORD=customerdb_pass
+  -e DB_USER=customer \
+  -e DB_PASSWORD=customer
 ```
 
 Replace `<GIT_REPO_URL>` with the actual Git repository URL. If the source is in a subdirectory or non-default branch, append `#<branch>` and use `--context-dir=<path>`.
