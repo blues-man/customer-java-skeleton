@@ -1,0 +1,1 @@
+# customer-java-skeleton
